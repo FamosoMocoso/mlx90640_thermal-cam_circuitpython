@@ -17,34 +17,39 @@ My code is an updated modification based on ![the code of David Glaude](https://
       - 128x160 TFT LCD Display (ST7735R)
       - and optional 1 Push-Button
 
-  # Dependencies
+# Dependencies
 
-  The code depends on the following Libraries:
-    - adafruit_display_text
-    - adafruit_bitmapsaver
-    - adafruit_mlx90640
-    - adafruit_st7735r
-    - simpleio
+The code depends on the following Libraries:
+* adafruit_display_text
+* adafruit_bitmapsaver
+* adafruit_mlx90640
+* adafruit_st7735r
+* simpleio
 
-  # Wiring
-  ## 128x160 TFT-LCD Display (ST7735r)
-MOSI    -   GP11
-CLK     -   GP10
-DC      -   GP16
-Reset   -   GP17
-CS      -   GP18
+# Wiring
+## 128x160 TFT-LCD Display (ST7735r)
+
+| DISP  | PICO |
+|-------|------|
+| MOSI  | GP11 |
+| CLK   | GP10 |
+| DC    | GP16 |
+| RESET | GP17 |
+| CS    | GP18 |
 
 ## MLX90640
-VIN     -   3V3
-GND     -   GND
-SCL     -   GP21
-SDA     -   GP20
-PS      -   GND
+| MLX  | PICO  |
+|------|-------|
+| VIN  | 3v3   |
+| GND  | GND   |
+| SCL  | GP21  |
+| SDA  | GP20  |
+| (PS) | (GND) |
 
-## Storage-Switch
-GP0     -   GND
-
-## Screenshot-Button
-GP22    -   GND
+## Storage-Switch and Button
+|        to take screenshots             |
+|------|-----|---------------------------|
+| GP0  | GND | JUMPER FOR STORAGE STATE  |
+| GP22 | GND | BUTTON TO TAKE SCREENSHOT |
   
   
