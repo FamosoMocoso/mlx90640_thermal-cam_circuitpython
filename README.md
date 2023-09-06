@@ -47,8 +47,7 @@ The code depends on the following Libraries:
 | (PS) | (GND) |
 
 ## Storage-Switch and Button
+|      |     |                           |
 |------|-----|---------------------------|
 | GP0  | GND | JUMPER FOR STORAGE STATE  |
-| GP22 | GND | BUTTON TO TAKE SCREENSHOT |
-  
-  
+| GP22 | GND | BUTTON TO TAKE SCREENSHOT |  
