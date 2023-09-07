@@ -22,12 +22,11 @@ mountstor.pull = Pull.UP
 try:
     if mountstor.value == False:
         print("storage active\n ------------")
-        storage.remount("/", readonly=mountstor.value)       
+        storage.remount("/", readonly=mountstor.value)
     else:
         print("no storage\n ---------------")
 except:
     pass
-
 # button to take screenshot
 button = DigitalInOut(board.GP22)
 button.direction = Direction.INPUT
@@ -54,22 +53,12 @@ last_color = number_of_colors - 1  # Last color in palette
 palette = displayio.Palette(number_of_colors)  # Palette with all our colors
 
 ## custom color gradian for heatmap
-color_A = [
-    [33, 22, 44],
-    [0, 100, 100],
-    [210, 210, 210],
-    [35, 245, 224],
-    [250, 5, 205]
-]
-color_B = [
-    [5, 40, 50],
-    [5, 230, 75],
-    [235, 155, 5],
-    [230, 5, 75]
-]
+color_A = [[33, 22, 44], [0, 100, 100], [210, 210, 210], [35, 245, 224], [250, 5, 205]]
+color_B = [[5, 40, 50], [5, 230, 75], [235, 155, 5], [230, 5, 75]]
 
-color = color_B #  color_A
+color = color_B  #  color_A
 NUM_COLORS = len(color)
+
 
 def MakeHeatMapColor():
     for c in range(number_of_colors):
@@ -93,6 +82,7 @@ def MakeHeatMapColor():
             )
         palette[c] = (0x010000 * red) + (0x000100 * green) + (0x000001 * blue)
 
+
 MakeHeatMapColor()
 
 # Bitmap for color coded thermal value
@@ -115,8 +105,7 @@ scale_group.append(scale_tile)
 
 for i in range(number_of_colors):
     scale_bitmap[0, i] = i  # Fill the scale with the palette gradian
-
-# Add min. and max. temp values in matching colors 
+# Add min. and max. temp values in matching colors
 min_label = Label(terminalio.FONT, scale=1, color=palette[0], x=92, y=8)
 max_label = Label(terminalio.FONT, scale=1, color=palette[last_color], x=92, y=152)
 
@@ -148,46 +137,59 @@ last_time1 = time.monotonic()
 frame = [0] * 768
 
 filename = [
-   '01.bmp', '02.bmp', '03.bmp', '04.bmp', '05.bmp',
-   '06.bmp', '07.bmp', '08.bmp', '09.bmp', '10.bmp',
-   '11.bmp', '12.bmp', '13.bmp', '14.bmp', '15.bmp'
+    "01.bmp",
+    "02.bmp",
+    "03.bmp",
+    "04.bmp",
+    "05.bmp",
+    "06.bmp",
+    "07.bmp",
+    "08.bmp",
+    "09.bmp",
+    "10.bmp",
+    "11.bmp",
+    "12.bmp",
+    "13.bmp",
+    "14.bmp",
+    "15.bmp",
 ]
-os.chdir('/snap')
-if len(os.listdir()) == 0: #  no screenshots yet
-    i=0
+os.chdir("/snap")
+if len(os.listdir()) == 0:  #  no screenshots yet
+    i = 0
 else:
-    i = len(os.listdir()) - 1 #  there are already screenshots, continue
-
+    i = len(os.listdir()) - 1  #  there are already screenshots, continue
 # ---MAIN LOOP---
 
 while True:
-    
+
     if time.monotonic() - last_time1 > 16:
-        print( "RAM left: ",gc.mem_free() / 1024 * 1.000, " kb" )
-    
+        print("RAM left: ", gc.mem_free() / 1024 * 1.000, " kb")
     try:
         mlx.getFrame(frame)
     except ValueError:
         continue
-    
     # some frame handeling with ulab.numpy
-    npframe=np.array(frame) #  convert frame to np.array
-    npframe[npframe < -100] = np.mean(npframe) # if there are bad pixels, set them to mean value
-    min_t=np.min(npframe) #  find lowest temp. measured in current frame
-    max_t=np.max(npframe) #  and the highest
-    factor=last_color/(max_t-min_t) 
-    inta=np.array((npframe-min_t)*factor,dtype=np.int8) #  normalize to int from 0 to last_color.
+    npframe = np.array(frame)  #  convert frame to np.array
+    npframe[npframe < -100] = np.mean(
+        npframe
+    )  # if there are bad pixels, set them to mean value
+    min_t = np.min(npframe)  #  find lowest temp. measured in current frame
+    max_t = np.max(npframe)  #  and the highest
+    factor = last_color / (max_t - min_t)
+    inta = np.array(
+        (npframe - min_t) * factor, dtype=np.int8
+    )  #  normalize to int from 0 to last_color.
 
     # set color according to heatmap
-#    int_bitmap=inta.reshape((24,32))
+    #    int_bitmap=inta.reshape((24,32))
     index = 0
     for h in range(24):
         for w in range(32):
-#            image_bitmap[h, w] = int_bitmap[h, w]
-#            image_bitmap[h, w] = inta[w+(h<<5)]
-#            image_bitmap[h, w] = inta[h*32+w]
+            #            image_bitmap[h, w] = int_bitmap[h, w]
+            #            image_bitmap[h, w] = inta[w+(h<<5)]
+            #            image_bitmap[h, w] = inta[h*32+w]
             image_bitmap[h, w] = inta[index]
-            index+=1
+            index += 1
     # update the scale with min and max temp.
     min_string = "%0.1f" % (min_t)
     max_string = "%0.1f" % (max_t)
@@ -202,14 +204,14 @@ while True:
     if button.value == False:
         if i < len(filename):
             print(os.getcwd())
-            print('capturing screen...')
-            save_pixels('/shot.bmp', display, palette)
+            print("capturing screen...")
+            save_pixels("/shot.bmp", display, palette)
             print(os.listdir())
-            os.rename('/shot.bmp', filename[i])
-            i+=1
-            print('done')
-            print('screenshot(s) saved:', os.listdir())
-            fs_stat = os.statvfs('/')
+            os.rename("/shot.bmp", filename[i])
+            i += 1
+            print("done")
+            print("screenshot(s) saved:", os.listdir())
+            fs_stat = os.statvfs("/")
             print("space left: ", fs_stat[0] * fs_stat[3] / 1024 / 1024, " mb")
         else:
-            print('enough screenshots')
+            print("enough screenshots")
