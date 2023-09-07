@@ -147,7 +147,6 @@ last_time1 = time.monotonic()
 
 frame = [0] * 768
 
-# this part checks the is for taking screenshots
 filename = [
    '01.bmp', '02.bmp', '03.bmp', '04.bmp', '05.bmp',
    '06.bmp', '07.bmp', '08.bmp', '09.bmp', '10.bmp',
