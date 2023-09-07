@@ -24,8 +24,9 @@ try:
         storage.remount("/", readonly=mountstor.value)
     else:
         print("no storage\n ---------------")
-except:
-    pass
+except Exception as exc:
+    error = exc
+
 # button to take screenshot
 button = DigitalInOut(board.GP22)
 button.direction = Direction.INPUT
