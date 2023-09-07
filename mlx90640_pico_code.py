@@ -11,7 +11,6 @@ import adafruit_mlx90640
 from adafruit_bitmapsaver import save_pixels
 from adafruit_st7735r import ST7735R
 from adafruit_display_text.label import Label
-from simpleio import map_range
 from digitalio import DigitalInOut, Direction, Pull
 
 # GP0 to GND to remount storage (to save screenshots)
@@ -20,7 +19,7 @@ mountstor.direction = Direction.INPUT
 mountstor.pull = Pull.UP
 
 try:
-    if mountstor.value == False:
+    if mountstor.value is False:
         print("storage active\n ------------")
         storage.remount("/", readonly=mountstor.value)
     else:
@@ -52,11 +51,12 @@ number_of_colors = 64  # Number of color in the gradian
 last_color = number_of_colors - 1  # Last color in palette
 palette = displayio.Palette(number_of_colors)  # Palette with all our colors
 
-## custom color gradian for heatmap
+# custom color gradian for heatmap
 color_A = [[33, 22, 44], [0, 100, 100], [210, 210, 210], [35, 245, 224], [250, 5, 205]]
 color_B = [[5, 40, 50], [5, 230, 75], [235, 155, 5], [230, 5, 75]]
 
-color = color_B  #  color_A
+color = color_B
+# color_A
 NUM_COLORS = len(color)
 
 
@@ -154,10 +154,10 @@ filename = [
     "15.bmp",
 ]
 os.chdir("/snap")
-if len(os.listdir()) == 0:  #  no screenshots yet
+if len(os.listdir()) == 0:  # no screenshots yet
     i = 0
 else:
-    i = len(os.listdir()) - 1  #  there are already screenshots, continue
+    i = len(os.listdir()) - 1  # there are already screenshots, continue
 # ---MAIN LOOP---
 
 while True:
@@ -169,16 +169,16 @@ while True:
     except ValueError:
         continue
     # some frame handeling with ulab.numpy
-    npframe = np.array(frame)  #  convert frame to np.array
+    npframe = np.array(frame)  # convert frame to np.array
     npframe[npframe < -100] = np.mean(
         npframe
     )  # if there are bad pixels, set them to mean value
-    min_t = np.min(npframe)  #  find lowest temp. measured in current frame
-    max_t = np.max(npframe)  #  and the highest
+    min_t = np.min(npframe)  # find lowest temp. measured in current frame
+    max_t = np.max(npframe)  # and the highest
     factor = last_color / (max_t - min_t)
     inta = np.array(
         (npframe - min_t) * factor, dtype=np.int8
-    )  #  normalize to int from 0 to last_color.
+    )  # normalize to int from 0 to last_color.
 
     # set color according to heatmap
     #    int_bitmap=inta.reshape((24,32))
@@ -201,7 +201,7 @@ while True:
     display.refresh()
 
     #  take screenshot on button press
-    if button.value == False:
+    if button.value is False:
         if i < len(filename):
             print(os.getcwd())
             print("capturing screen...")
